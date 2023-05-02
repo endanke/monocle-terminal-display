@@ -1,0 +1,14 @@
+{
+  "name": "monocle-terminal-display",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "monocle-node-cli": "git://github.com/endanke/monocle-node-cli#8244441"
+  },
+  "author": "",
+  "license": "ISC"
+}

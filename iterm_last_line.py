@@ -9,8 +9,10 @@ async def main(connection):
     tab = window.tabs[0]
     session = tab.current_session
     contents = await session.async_get_screen_contents()
-    if contents.number_of_lines > 0:
+    if contents.cursor_coord.y < contents.number_of_lines:
         print(contents.line(contents.cursor_coord.y-1).string)
+    elif contents.number_of_lines > 0:
+        print(contents.line(contents.number_of_lines-2).string)
 
 iterm2.run_until_complete(main)
 #iterm2.run_forever(main)

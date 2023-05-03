@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
 import iterm2
+import sys
 
 async def main(connection):
     app = await iterm2.async_get_app(connection)
     window = app.current_window
-    #tab = window.current_tab
-    tab = window.tabs[0]
+    # Optional first param is the index of the terminal tab to use, defaulting to the current tab
+    if len(sys.argv) > 1:
+        tab = window.tabs[int(sys.argv[1])]
+    else:
+        tab = window.current_tab
     session = tab.current_session
     contents = await session.async_get_screen_contents()
     if contents.cursor_coord.y < contents.number_of_lines:

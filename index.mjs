@@ -10,7 +10,8 @@ const displayAPI = await fs.readFile('wip_display.py', 'utf8');
 const lineLimit = 6;
 var lineBuffer = new Array(lineLimit);
 lineBuffer.fill(".");
-var lastLine = ""
+var lastLine = "";
+var lastLineDate = new Date();
 
 // From: https://stackoverflow.com/a/63558697/1960938
 const isNilOrWhitespace = input => (input?.trim()?.length || 0) === 0;
@@ -21,9 +22,17 @@ function stringWithPlaceholder(string) {
   return string;
 }
 
+async function inactivityCheck() {
+  if (lastLineDate < new Date() - 5000) {
+    // Probably a bug, but at least this clears the display
+    replSend(`line = display.Line(0, 0, 1, 1, display.BLACK, thickness=1); display.show(line);` + enter);
+  }
+}
+
 async function sendLastLine() {
   const { stdout } = await execAsync('python iterm_last_line.py 0');
   if (lastLine != stdout) {
+    lastLineDate = new Date();
     lastLine = stdout;
     lineBuffer.shift();
     lineBuffer.push(lastLine.slice(-lineCharLimit));
@@ -35,7 +44,7 @@ async function sendLastLine() {
     replCommmand += `t4 = display.Text("${stringWithPlaceholder(lineBuffer[2])}", 10, 220, display.GREEN);`;
     replCommmand += `t5 = display.Text("${stringWithPlaceholder(lineBuffer[1])}", 10, 290, display.GREEN);`;
     replCommmand += `t6 = display.Text("${stringWithPlaceholder(lineBuffer[0])}", 10, 360, display.GREEN);`;
-    replCommmand += `display.show(t1, t2, t3, t4, t5, t6)`;
+    replCommmand += `display.show(t1, t2, t3, t4, t5, t6);`;
     replSend(replCommmand + enter);
   }
 }
@@ -50,3 +59,4 @@ replSend("import led; led.off(led.RED);" + enter);
 replSend('\x05' + displayAPI + '\x04');
 
 setInterval(sendLastLine, 500);
+setInterval(inactivityCheck, 5000);

@@ -5,7 +5,7 @@ import { promises as fs } from 'fs';
 
 const execAsync = util.promisify(exec);
 const enter = '\x1B[F\r';
-const lineCharLimit = 24;
+const lineCharLimit = 27;
 const displayAPI = await fs.readFile('wip_display.py', 'utf8');
 const lineLimit = 6;
 var lineBuffer = new Array(lineLimit);
